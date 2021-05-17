@@ -11,6 +11,13 @@
 **SSH**
 - Generate ssh key
 > ssh-keygen -t rsa -C user@email.com
+Type `Enter` till the end.
+
+- Add ssh key to git account
+1. Copy ssh key, exec command below and copy all then output text
+> cat id_rsa.pub
+
+2. Open account `Setting`, find the `SSH and GPG keys` menu, then click `New SSH key`, paste the ssh key to the textarea.
 
 **Muti account**
 If there are A and B:
@@ -20,6 +27,7 @@ If there are A and B:
 
 2. Generate A ssh key
 > ssh-keygen -t rsa -C A@email.com
+
 ![](./images/a_rsa.png)
 Type `a_id_rsa` as file, if current path are not in the path `/home/$username/.ssh`,then should type `/home/$username/.ssh/a_id_rsa`.Then type `enter` for next steps till the end.
 *$username is a variable*
@@ -30,6 +38,7 @@ Type `a_id_rsa` as file, if current path are not in the path `/home/$username/.s
 
 4. Generate B ssh key
 > ssh-keygen -t rsa -C A@email.com
+
 ![](./images/b_rsa.png)
 Type `b_id_rsa` as file, if current path are not in the path `/home/$username/.ssh`,then should type `/home/$username/.ssh/b_id_rsa`.Then type `enter` for next steps till the end.
 *$username is a variable*
