@@ -44,6 +44,63 @@ function lengthOfLongestSubstring(s: string): number {
   return maxLen;
 }
 
-const input = "pwwkew";
+/**
+ * answer
+ */
+
+function answer(s: string): number {
+  // 哈希集合，记录每个字符是否出现过
+  const occ = new Set();
+  const n = s.length;
+  // 右指针，初始值为 -1，相当于我们在字符串的左边界的左侧，还没有开始移动
+  let rk = -1,
+    ans = 0;
+  for (let i = 0; i < n; ++i) {
+    if (i != 0) {
+      // 左指针向右移动一格，移除一个字符
+      occ.delete(s.charAt(i - 1));
+    }
+    while (rk + 1 < n && !occ.has(s.charAt(rk + 1))) {
+      // 不断地移动右指针
+      occ.add(s.charAt(rk + 1));
+      ++rk;
+    }
+    // 第 i 到 rk 个字符是一个极长的无重复字符子串
+    ans = Math.max(ans, rk - i + 1);
+  }
+  return ans;
+}
+
+/**
+ * optimization
+ */
+function optimization(s: string): number {
+  let max = 0,
+    left = 0,
+    right = 0;
+
+  const len = s.length,
+    mp = new Map<string, number>();
+
+  while (left < len && len - left > max) {
+    const char = s[right];
+    if (mp.has(char)) {
+      // 重复
+      max = Math.max(max, right - left);
+      left = mp.get(char) + 1;
+      right = left;
+      mp.clear();
+      continue;
+    }
+    // 不重复
+    mp.set(char, right);
+    right++;
+    max = Math.max(max, right - left);
+  }
+
+  return max;
+}
+
+const input = "pwwakw"; // pwwakw
 console.log("input:", input);
-console.log("result:", lengthOfLongestSubstring(input));
+console.log("result:", optimization(input));
