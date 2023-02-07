@@ -70,7 +70,7 @@ function convert(s: string, numRows: number): string {
     //   k += offset;
     // } while(k <= columns)
 
-    for (let j = 1; j <= columns; j + (numRows - i)) {
+    for (let j = 1; j <= columns; j++) {
       const curCount = Math.ceil((j - 1) / (numRows - 1));
       const remainder = (j - 1) % (numRows - 1);
 
