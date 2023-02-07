@@ -46,38 +46,50 @@ function convert(s: string, numRows: number): string {
 
   const len = s.length;
 
-  if (len <= numRows) {
+  // 只有一行
+  if (len <= numRows || numRows <= 1) {
     return s;
   }
 
-  const size = numRows * 2 - 2;
-
-  const count = Math.floor(len / size);
-  const remainder = len % size;
-
-  const arr: string[][] = [];
-  let k = 0;
-
-  for (let i = 0; i <= count + remainder; i++) {
-    for (let j = 0; j <= numRows; j++) {
-      if (j % (numRows - 1) == 0) {
-        arr[j][i] = s[k];
-        k++;
-        continue;
-      }
-      if ((j + i) % (numRows - 1) == 0) {
-        arr[j][i] = s[k];
-        k++;
-        continue;
-      }
-      arr[j][i] = null;
-    }
+  // n 个完整 z 字的字符串长度
+  function getNZLen(n: number): number {
+    return (3 * numRows - 2) * n - numRows * (n - 1);
   }
 
-  for (let i = 0; i <= numRows; i++) {
-    for (let j = 0; j <= count + remainder; j++) {
-      if (typeof arr[i][j] == "string") {
-        resStr += arr[i][j];
+  const count = Math.ceil((len - numRows) / (2 * (numRows - 1)));
+  const columns = numRows * count - (count - 1);
+
+  for (let i = 1; i <= numRows; i++) {
+    // let offset = numRows - i;
+    // let k = 0;
+    // do {
+    //   if (typeof s[k] == "undefined") {
+    //     break
+    //   }
+    //   resStr += s[k];
+    //   k += offset;
+    // } while(k <= columns)
+
+    for (let j = 1; j <= columns; j + (numRows - i)) {
+      const curCount = Math.ceil((j - 1) / (numRows - 1));
+      const remainder = (j - 1) % (numRows - 1);
+
+      if (remainder == 0) {
+        // 竖
+        const index = getNZLen(curCount) - (numRows - i) - 1;
+        if (typeof s[index] != "undefined") {
+          resStr += s[index];
+        }
+        continue;
+      }
+
+      const column = j - ((curCount - 1) * numRows - (curCount - 1 - 1)) + 1;
+      if (i + column == numRows + 1) {
+        // 对角线
+        const index = getNZLen(curCount - 1) + (numRows - i) - 1;
+        if (typeof s[index] != "undefined") {
+          resStr += s[index];
+        }
       }
     }
   }

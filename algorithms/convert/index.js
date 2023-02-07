@@ -40,35 +40,36 @@ P     I
  * @returns
  */
 function convert(s, numRows) {
+    function getNZLen(n) {
+        return (3 * numRows - 2) * n - numRows * (n - 1);
+    }
     var resStr = "";
     var len = s.length;
     if (len <= numRows) {
         return s;
     }
-    var size = numRows * 2 - 2;
-    var count = Math.floor(len / size);
-    var remainder = len % size;
-    var arr = [];
-    var k = 0;
-    for (var i = 0; i <= count + remainder; i++) {
-        for (var j = 0; j <= numRows; j++) {
-            if (j % (numRows - 1) == 0) {
-                arr[j][i] = s[k];
-                k++;
+    var size = numRows * 3 - 2;
+    var count = Math.ceil((len - numRows) / (2 * (numRows - 1)));
+    var columns = numRows * count - (count - 1);
+    for (var i = 1; i <= numRows; i++) {
+        for (var j = 1; j <= columns; j++) {
+            var curCount = Math.ceil((j - 1) / (numRows - 1));
+            var remainder = (j - 1) % (numRows - 1);
+            if (remainder == 0) {
+                // 竖
+                var index = getNZLen(curCount) - (numRows - i) - 1;
+                if (typeof s[index] != "undefined") {
+                    resStr += s[index];
+                }
                 continue;
             }
-            if ((j + i) % (numRows - 1) == 0) {
-                arr[j][i] = s[k];
-                k++;
-                continue;
-            }
-            arr[j][i] = null;
-        }
-    }
-    for (var i = 0; i <= numRows; i++) {
-        for (var j = 0; j <= count + remainder; j++) {
-            if (typeof arr[i][j] == "string") {
-                resStr += arr[i][j];
+            var column = j - ((curCount - 1) * numRows - (curCount - 1 - 1)) + 1;
+            if (i + column == numRows + 1) {
+                // 对角线
+                var index = getNZLen(curCount - 1) + (numRows - i) - 1;
+                if (typeof s[index] != "undefined") {
+                    resStr += s[index];
+                }
             }
         }
     }
