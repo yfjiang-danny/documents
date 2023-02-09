@@ -57,20 +57,20 @@ function convert(s: string, numRows: number): string {
   }
 
   const count = Math.ceil((len - numRows) / (2 * (numRows - 1)));
-  const columns = numRows * count - (count - 1);
+  const rd = (len - numRows) % (2 * (numRows - 1));
+  const columns =
+    rd == 0
+      ? numRows * count - (count - 1)
+      : Math.min(
+          numRows * (count - 1) - (count - 1 - 1) + rd + 1,
+          numRows * count - (count - 1)
+        );
 
   for (let i = 1; i <= numRows; i++) {
-    // let offset = numRows - i;
-    // let k = 0;
-    // do {
-    //   if (typeof s[k] == "undefined") {
-    //     break
-    //   }
-    //   resStr += s[k];
-    //   k += offset;
-    // } while(k <= columns)
+    let offset = numRows - i;
 
-    for (let j = 1; j <= columns; j++) {
+    let j = 1;
+    while (j <= columns) {
       const curCount = Math.ceil((j - 1) / (numRows - 1));
       const remainder = (j - 1) % (numRows - 1);
 
@@ -79,17 +79,25 @@ function convert(s: string, numRows: number): string {
         const index = getNZLen(curCount) - (numRows - i) - 1;
         if (typeof s[index] != "undefined") {
           resStr += s[index];
+        } else {
+          break;
         }
-        continue;
-      }
-
-      const column = j - ((curCount - 1) * numRows - (curCount - 1 - 1)) + 1;
-      if (i + column == numRows + 1) {
+      } else {
         // 对角线
         const index = getNZLen(curCount - 1) + (numRows - i) - 1;
         if (typeof s[index] != "undefined") {
           resStr += s[index];
+        } else {
+          break;
         }
+      }
+      if (i != 1 && i != numRows) {
+        j += offset;
+        const temp = offset;
+        offset = numRows - 1 - temp;
+      } else {
+        offset = numRows - 1;
+        j += offset;
       }
     }
   }

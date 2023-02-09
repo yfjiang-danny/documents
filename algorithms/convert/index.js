@@ -40,19 +40,25 @@ P     I
  * @returns
  */
 function convert(s, numRows) {
+    var resStr = "";
+    var len = s.length;
+    // 只有一行
+    if (len <= numRows || numRows <= 1) {
+        return s;
+    }
+    // n 个完整 z 字的字符串长度
     function getNZLen(n) {
         return (3 * numRows - 2) * n - numRows * (n - 1);
     }
-    var resStr = "";
-    var len = s.length;
-    if (len <= numRows) {
-        return s;
-    }
-    var size = numRows * 3 - 2;
     var count = Math.ceil((len - numRows) / (2 * (numRows - 1)));
-    var columns = numRows * count - (count - 1);
+    var rd = (len - numRows) % (2 * (numRows - 1));
+    var columns = rd == 0
+        ? numRows * count - (count - 1)
+        : Math.min(numRows * (count - 1) - (count - 1 - 1) + rd + 1, numRows * count - (count - 1));
     for (var i = 1; i <= numRows; i++) {
-        for (var j = 1; j <= columns; j++) {
+        var offset = numRows - i;
+        var j = 1;
+        while (j <= columns) {
             var curCount = Math.ceil((j - 1) / (numRows - 1));
             var remainder = (j - 1) % (numRows - 1);
             if (remainder == 0) {
@@ -61,15 +67,28 @@ function convert(s, numRows) {
                 if (typeof s[index] != "undefined") {
                     resStr += s[index];
                 }
-                continue;
+                else {
+                    break;
+                }
             }
-            var column = j - ((curCount - 1) * numRows - (curCount - 1 - 1)) + 1;
-            if (i + column == numRows + 1) {
+            else {
                 // 对角线
                 var index = getNZLen(curCount - 1) + (numRows - i) - 1;
                 if (typeof s[index] != "undefined") {
                     resStr += s[index];
                 }
+                else {
+                    break;
+                }
+            }
+            if (i != 1 && i != numRows) {
+                j += offset;
+                var temp = offset;
+                offset = numRows - 1 - temp;
+            }
+            else {
+                offset = numRows - 1;
+                j += offset;
             }
         }
     }
