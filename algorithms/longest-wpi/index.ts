@@ -23,36 +23,22 @@
  */
 
 function longestWPI(hours: number[]): number {
-  const len = hours.length;
-  let res = 0;
-
-  let good = 0;
-  let bad = 0;
-
-  let i = 0;
-
-  while (i < len) {
-    let j = i;
-    let flag = hours[i] > 8 ? true : false;
-    while (j < len) {
-      if (flag) {
-        good++;
-      } else {
-        bad++;
-      }
-      if (j < len - 1) {
-        const nextFlag = hours[j + 1] > 8 ? true : false;
-        if (nextFlag != flag) {
-          // 切换
-
-          break;
-        }
-      }
-      j++;
+  const n = hours.length;
+  const s = new Array(n + 1).fill(0);
+  const stk = [0];
+  for (let i = 1; i <= n; i++) {
+    s[i] = s[i - 1] + (hours[i - 1] > 8 ? 1 : -1);
+    if (s[stk[stk.length - 1]] > s[i]) {
+      stk.push(i);
     }
-    i = j + 1;
   }
 
+  let res = 0;
+  for (let r = n; r >= 1; r--) {
+    while (stk.length && s[stk[stk.length - 1]] < s[r]) {
+      res = Math.max(res, r - stk.pop());
+    }
+  }
   return res;
 }
 
