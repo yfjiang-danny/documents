@@ -22,34 +22,32 @@
 输出：false
 
  */
+/**
+ * Answer：求最大公约数是 1，只要有一组满足就是 true
+ * @param num1
+ * @param num2
+ * @returns
+ */
+function gcd(num1, num2) {
+    while (num2 !== 0) {
+        var temp = num1;
+        num1 = num2;
+        num2 = temp % num2;
+    }
+    return num1;
+}
 function isGoodArray(nums) {
-    for (let i = 0; i < nums.length; i++) {
-        const a = nums[i];
-        if (a == 1) {
-            return true;
-        }
-        for (let j = i + 1; j < nums.length; j++) {
-            const b = nums[j];
-            if (b == 1) {
-                return true;
-            }
-            if (a == b)
-                continue;
-            if (a > b) {
-                if (a % b != 0) {
-                    return true;
-                }
-            }
-            else {
-                if (b % a != 0) {
-                    return true;
-                }
-            }
+    var divisor = nums[0];
+    for (var _i = 0, nums_1 = nums; _i < nums_1.length; _i++) {
+        var num = nums_1[_i];
+        divisor = gcd(divisor, num);
+        if (divisor === 1) {
+            break;
         }
     }
-    return false;
+    return divisor === 1;
 }
-const input = [3, 6];
+var input = [3, 6];
 console.log("input:", input.toString());
-const result = isGoodArray(input);
+var result = isGoodArray(input);
 console.log("result:", result.toString());
