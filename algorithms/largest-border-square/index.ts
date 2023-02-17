@@ -15,15 +15,23 @@
 grid[i][j] 为 0 或 1
  */
 
+/**
+ * 判断 [row, column] 长度为 n 的情况是否满足
+ * @param row
+ * @param column
+ * @param n
+ * @param arr
+ * @returns
+ */
 function isSquare(
   row: number,
   column: number,
   n: number,
   arr: number[][]
 ): boolean {
-  if (n <= 0 || row + n >= arr.length || column + n >= arr[row].length)
-    return false;
-  for (let j = 1; j <= n; j++) {
+  if (n == 0) return true;
+  if (row + n >= arr.length || column + n >= arr[row].length) return false;
+  for (let j = 0; j <= n; j++) {
     if (
       arr[row][column + j] != 1 ||
       arr[row + n][column + j] != 1 ||
@@ -36,9 +44,25 @@ function isSquare(
   return true;
 }
 
+/**
+ * 获取以 [row,column] 为左上顶点时最大的可能性长度
+ * @param arr
+ * @param row
+ * @param column
+ */
+function getMaxN(arr: number[][], row: number, column: number): number {
+  let n = 0;
+  while (row + n < arr.length && column + n < arr[row].length) {
+    if (arr[row][column + n] != 1 || arr[row + n][column] != 1) {
+      break;
+    }
+    n++;
+  }
+  return n;
+}
+
 function largest1BorderedSquare(grid: number[][]): number {
   let res = 0;
-  let min = 0;
 
   const row = grid.length,
     column = grid[0].length;
@@ -48,11 +72,10 @@ function largest1BorderedSquare(grid: number[][]): number {
     let j = 0;
     while (j < column - res) {
       if (grid[i][j] == 1) {
-        min = 1;
-        const maxN = Math.max(row - i, column - j);
-        for (let n = maxN; n > 0; n--) {
+        const maxN = getMaxN(grid, i, j);
+        for (let n = maxN; n >= 0; n--) {
           if (isSquare(i, j, n, grid)) {
-            res = Math.max(res, n);
+            res = Math.max(res, n + 1);
             break;
           }
         }
@@ -62,10 +85,14 @@ function largest1BorderedSquare(grid: number[][]): number {
     i++;
   }
 
-  return min > 0 ? Math.pow(res + 1, 2) : min;
+  return Math.pow(res, 2);
 }
 
-const input = [[1, 1, 0, 0]];
+const input = [
+  [1, 1, 1],
+  [1, 0, 1],
+  [1, 1, 1],
+];
 
 console.log("input:", input.toString());
 

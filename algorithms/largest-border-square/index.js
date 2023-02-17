@@ -14,10 +14,20 @@
 1 <= grid[0].length <= 100
 grid[i][j] 为 0 或 1
  */
+/**
+ * 判断 [row, column] 长度为 n 的情况是否满足
+ * @param row
+ * @param column
+ * @param n
+ * @param arr
+ * @returns
+ */
 function isSquare(row, column, n, arr) {
-    if (n <= 0 || row + n >= arr.length || column + n >= arr[row].length)
+    if (n == 0)
+        return true;
+    if (row + n >= arr.length || column + n >= arr[row].length)
         return false;
-    for (var j = 1; j <= n; j++) {
+    for (var j = 0; j <= n; j++) {
         if (arr[row][column + j] != 1 ||
             arr[row + n][column + j] != 1 ||
             arr[row + j][column] != 1 ||
@@ -27,20 +37,34 @@ function isSquare(row, column, n, arr) {
     }
     return true;
 }
+/**
+ * 获取以 [row,column] 为左上顶点时最大的可能性长度
+ * @param arr
+ * @param row
+ * @param column
+ */
+function getMaxN(arr, row, column) {
+    var n = 0;
+    while (row + n < arr.length && column + n < arr[row].length) {
+        if (arr[row][column + n] != 1 || arr[row + n][column] != 1) {
+            break;
+        }
+        n++;
+    }
+    return n;
+}
 function largest1BorderedSquare(grid) {
     var res = 0;
-    var min = 0;
     var row = grid.length, column = grid[0].length;
     var i = 0;
     while (i < row - res) {
         var j = 0;
         while (j < column - res) {
             if (grid[i][j] == 1) {
-                min = 1;
-                var maxN = Math.max(row - i, column - j);
-                for (var n = maxN; n > 0; n--) {
+                var maxN = getMaxN(grid, i, j);
+                for (var n = maxN; n >= 0; n--) {
                     if (isSquare(i, j, n, grid)) {
-                        res = Math.max(res, n);
+                        res = Math.max(res, n + 1);
                         break;
                     }
                 }
@@ -49,9 +73,13 @@ function largest1BorderedSquare(grid) {
         }
         i++;
     }
-    return min > 0 ? Math.pow(res + 1, 2) : min;
+    return Math.pow(res, 2);
 }
-var input = [[1, 1, 0, 0]];
+var input = [
+    [1, 1, 1],
+    [1, 0, 1],
+    [1, 1, 1],
+];
 console.log("input:", input.toString());
 var result = largest1BorderedSquare(input);
 console.log("result:", result.toString());
