@@ -35,7 +35,7 @@ ranges.length == n + 1
 */
 
 /**
- * 贪心
+ * 贪心，计算第 i 块地能覆盖的最远的距离
  * @param n
  * @param ranges
  * @returns
