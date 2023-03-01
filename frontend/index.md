@@ -21,7 +21,54 @@
    缺：a.无法取消和中断，一旦新建就会立即执行，无法中途取消 b. 如果不设置回调函数，Promise 内部抛出的错误，不会反应到外部 c.当处于 Pending 状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将结束）？ d. Promise 真正执行回调的时候，定义 Promise 那部分实际上已经执行完了，所以 Promise 的报错堆栈上下文不太友好
 
 3. JWT 和 Oauth 的区别 [知乎](https://zhuanlan.zhihu.com/p/121630884)
+
    - JWT(Json Web Token) 是一种认证协议 。JWT 提供了一种用于发布接入令牌（Access Token),并对发布的签名接入令牌进行验证的方法。 令牌（Token）本身包含了一系列声明，应用程序可以根据这些声明限制用户对资源的访问。
    - JWT 一般是由三部分组成，Header + Payload + Signature。Header 部分是一个 JSON 对象，描述 JWT 的元数据；Payload 部分也是一个 JSON 对象，用来存放实际需要传递的数据。Signature 部分是对前两部分的签名，防止数据篡改。其中 Header 部分和 Payload 部分通常会采用 Base64URL 的算法进行加密。
    - Base64URL 算法与 Base64 算法的区别：Base64 有三个字符`+`、`/`和`=`，在 URL 里面有特殊含义，所以要被替换掉：`=`被省略、`+`替换成`-`，`/`替换成`_` 。这就是 Base64URL 算法。
    - OAuth2 是一种授权框架。提供了一套详细的授权机制（指导）。用户或应用可以通过公开的或私有的设置，授权第三方应用访问特定资源。比如微信授权登录。
+
+4. 深浅拷贝
+
+   - 浅拷贝：拷贝值或者拷贝地址，常见有 `object.assign`, `...`扩展运算符,`concat`, `slice`,`splice`
+   - 深拷贝：开辟新的内存空间，将源对象的值完全拷贝到新的内存空间。常见的有 `JSON.stringify`,`手写递归拷贝`
+
+     > JSON.stringify 缺点：a. 会忽略 `undefined`、`symbol` b. 不能序列化函数 c. 无法拷贝不可枚举的属性和对象的原型链 d. 拷贝 `RegExp` 引用类型会变成空对象，`Date` 类型会变成字符串 e. 对象中含有 `NaN`、`Infinity` 以及 `-Infinity`，`JSON` 序列化的结果会变成 `null` f. 不能解决循环引用的对象，即对象成环 (`obj[key] = obj`)
+
+     ```js
+     const isComplexDataType = (obj) =>
+       (typeof obj === "object" || typeof obj === "function") && obj !== null;
+     const deepClone = function (obj, hash = new WeakMap()) {
+       if (obj.constructor === Date) {
+         return new Date(obj); // 日期对象直接返回一个新的日期对象
+       }
+
+       if (obj.constructor === RegExp) {
+         return new RegExp(obj); //正则对象直接返回一个新的正则对象
+       }
+
+       //如果循环引用了就用 weakMap 来解决
+       if (hash.has(obj)) {
+         return hash.get(obj);
+       }
+       let allDesc = Object.getOwnPropertyDescriptors(obj);
+
+       //遍历传入参数所有键的特性
+       let cloneObj = Object.create(Object.getPrototypeOf(obj), allDesc);
+
+       // 把 cloneObj 原型复制到 obj 上
+       hash.set(obj, cloneObj);
+
+       for (let key of Reflect.ownKeys(obj)) {
+         cloneObj[key] =
+           isComplexDataType(obj[key]) && typeof obj[key] !== "function"
+             ? deepClone(obj[key], hash)
+             : obj[key];
+       }
+       return cloneObj;
+     };
+     ```
+
+5. Proxy
+   Proxy 在目标对象的外层搭建了一层拦截，外界对目标对象的某些操作，必须通过这层拦截。
+   - 拦截和监视外部对对象的访问
+   - 在复杂操作前对操作进行校验或对所需资源进行管理
