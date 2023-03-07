@@ -36,18 +36,168 @@ expression[i] 由 '{'，'}'，',' 或小写英文字母组成
 
  */
 
+/**
+ * @description
+ * 堆栈的方法
+ *
+ */
 namespace BraceExpansion {
+  function isChar(char: string): boolean {
+    return /[a-z]/.test(char);
+  }
+
+  function calc(operator: string[], values: (string | string[])[]) {
+    const opt = operator.pop();
+    if (opt == "{") {
+      return;
+    }
+    if (values.length < 2) {
+      return;
+    }
+    const back = values.pop();
+    const front = values.pop();
+    if (!back || !front) {
+      return;
+    }
+    if (opt == "*") {
+      if (typeof back == "string" && typeof front == "string") {
+        values.push(front + back);
+        return;
+      }
+      if (Array.isArray(front) && Array.isArray(back)) {
+        const res: string[] = [];
+        front.forEach((a) => {
+          back.forEach((b) => {
+            res.push(a + b);
+          });
+        });
+        values.push(res);
+
+        return;
+      }
+      if (Array.isArray(front) && !Array.isArray(back)) {
+        const res: string[] = [];
+        front.forEach((a) => {
+          res.push(a + back);
+        });
+        values.push(res);
+        return;
+      }
+      if (!Array.isArray(front) && Array.isArray(back)) {
+        const res: string[] = [];
+        back.forEach((a) => {
+          res.push(front + a);
+        });
+        values.push(res);
+        return;
+      }
+    }
+
+    // Deal with ','
+    const res: string[] = [
+      ...(Array.isArray(front) ? front : [front]),
+      ...(Array.isArray(back) ? back : [back]),
+    ];
+    values.push(res);
+  }
+
   export function braceExpansionII(expression: string): string[] {
-    const res = [],
-      stack = [],
+    const res: (string[] | string)[] = [],
+      operator: string[] = [],
       len = expression.length;
 
-    return res;
+    let i = 0;
+    while (i < len) {
+      const element = expression[i];
+      if (isChar(element)) {
+        if (i - 1 >= 0) {
+          if (expression[i - 1] == "}") {
+            operator.push("*");
+          }
+        }
+        let str = element;
+        i++;
+        while (i < len && isChar(expression[i])) {
+          str += expression[i];
+          i++;
+        }
+        res.push(str);
+        continue;
+      }
+      if (element == "{") {
+        if (
+          i - 1 >= 0 &&
+          (expression[i - 1] == "}" || isChar(expression[i - 1]))
+        ) {
+          operator.push("*");
+        }
+        operator.push("{");
+        i++;
+        continue;
+      }
+      if (element == ",") {
+        while (operator.length > 0 && operator[operator.length - 1] == "*") {
+          calc(operator, res);
+        }
+        operator.push(element);
+        i++;
+        continue;
+      }
+      if (element == "}") {
+        while (operator.length > 0 && operator[operator.length - 1] != "{") {
+          calc(operator, res);
+        }
+        if (operator[operator.length - 1] == "{") {
+          operator.pop();
+        }
+        i++;
+        continue;
+      }
+    }
+
+    while (operator.length > 0) {
+      calc(operator, res);
+    }
+
+    const arr: string[] = [];
+    res.forEach((v) => {
+      if (Array.isArray(v)) {
+        arr.push(...v);
+      } else {
+        arr.push(v);
+      }
+    });
+
+    const set = new Set(arr);
+
+    return Array.from(set).sort();
+  }
+
+  export function recursion(expression: string): string[] {
+    const dfs = (exp: string) => {
+      let j = exp.indexOf("}");
+      if (j === -1) {
+        set.add(exp);
+        return;
+      }
+      let i = j;
+      while (exp.charAt(i) !== "{") {
+        --i;
+      }
+      let a = exp.substring(0, i);
+      let c = exp.substring(j + 1);
+      for (const b of exp.substring(i + 1, j).split(",")) {
+        dfs(a + b + c);
+      }
+    };
+    const set: Set<string> = new Set();
+    dfs(expression);
+    return Array.from(set).sort();
   }
 }
 
 (() => {
-  const input = "{a,b}{c,{d,e}}";
+  const input = "{{a,z},a{b,c},{ab,z}}";
 
   console.log("input:", input.toString());
 
