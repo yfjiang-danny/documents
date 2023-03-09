@@ -35,6 +35,7 @@ namespace MinimumRecolors {
   export function minimumRecolors(blocks: string, k: number): number {
     let bLen = 0;
 
+    // 可改为 while 循环，在下面的循环里也可以再次使用
     for (let i = 0; i < k; i++) {
       if (blocks[i] == "B") {
         bLen++;
