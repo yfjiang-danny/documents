@@ -1,1 +1,3 @@
+algorithms/*.js
 algorithms/*/*.js
+algorithms/*/*/*.js
