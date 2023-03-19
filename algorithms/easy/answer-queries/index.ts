@@ -1,4 +1,4 @@
-/// <reference path="../test.ts" />
+/// <reference path="../../test.ts" />
 
 /**
  * 2389. 和有限的最长子序列
