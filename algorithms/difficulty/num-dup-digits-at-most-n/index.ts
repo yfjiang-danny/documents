@@ -67,6 +67,30 @@ namespace Difficulty {
     return res;
   }
 
+  function getPartialValue(max: number, len: number, remain: number): number {
+    if (remain <= 0) {
+      return 0;
+    }
+    if (len <= 1) {
+      return len;
+    }
+    let i = len,
+      res = 0;
+    while (i > 1) {
+      res += 9 * getPermutationValue(9, i - 1);
+      i--;
+    }
+    res += 9;
+    return res;
+  }
+
+  function getIntegralValue(max: number, len: number): number {
+    return (
+      (max - 1) * getPermutationValue(9, len - 1) +
+      9 * getPermutationValue(9, len - 2)
+    );
+  }
+
   export function numDupDigitsAtMostN(n: number): number {
     if (n <= 10) {
       return 0;
@@ -114,16 +138,49 @@ namespace Difficulty {
 
     return n - notFit;
   }
+
+  export function answer1(n: number): number {
+    const sn = "" + n;
+    const dp = new Array(sn.length)
+      .fill(0)
+      .map(() => new Array(1 << 10).fill(-1));
+    const f = (mask, sn, i, same) => {
+      if (i === sn.length) {
+        return 1;
+      }
+      if (!same && dp[i][mask] >= 0) {
+        return dp[i][mask];
+      }
+      let res = 0,
+        t = same ? sn[i].charCodeAt() - "0".charCodeAt(0) : 9;
+      for (let k = 0; k <= t; k++) {
+        if ((mask & (1 << k)) !== 0) {
+          continue;
+        }
+        res += f(
+          mask === 0 && k === 0 ? mask : mask | (1 << k),
+          sn,
+          i + 1,
+          same && k === t
+        );
+      }
+      if (!same) {
+        dp[i][mask] = res;
+      }
+      return res;
+    };
+    return n + 1 - f(0, sn, 0, true);
+  }
 }
 
 // tsc -t esnext --outFile algorithms/test.js algorithms/test.ts algorithms/difficulty/num-dup-digits-at-most-n/index.ts && node algorithms/test.js
 (() => {
   UnitTest.test(Difficulty.numDupDigitsAtMostN, 120, 13);
-  // UnitTest.test(Difficulty.numDupDigitsAtMostN, 10, 0);
-  // UnitTest.test(Difficulty.numDupDigitsAtMostN, 11, 1);
-  // UnitTest.test(Difficulty.numDupDigitsAtMostN, 20, 1);
-  // UnitTest.test(Difficulty.numDupDigitsAtMostN, 22, 2);
-  // UnitTest.test(Difficulty.numDupDigitsAtMostN, 100, 10);
-  // UnitTest.test(Difficulty.numDupDigitsAtMostN, 1000, 262);
-  // UnitTest.test(Difficulty.numDupDigitsAtMostN, 999, 261);
+  UnitTest.test(Difficulty.numDupDigitsAtMostN, 10, 0);
+  UnitTest.test(Difficulty.numDupDigitsAtMostN, 11, 1);
+  UnitTest.test(Difficulty.numDupDigitsAtMostN, 20, 1);
+  UnitTest.test(Difficulty.numDupDigitsAtMostN, 22, 2);
+  UnitTest.test(Difficulty.numDupDigitsAtMostN, 100, 10);
+  UnitTest.test(Difficulty.numDupDigitsAtMostN, 1000, 262);
+  UnitTest.test(Difficulty.numDupDigitsAtMostN, 999, 261);
 })();
