@@ -22,6 +22,11 @@
  */
 
 namespace Difficulty {
+  /**
+   * 阶乘
+   * @param num
+   * @returns
+   */
   function getFactorialValue(num: number): number {
     if (num <= 1) {
       return 1;
@@ -36,6 +41,7 @@ namespace Difficulty {
   }
 
   /**
+   * 组合
    * @description C[n,k] = n!/((n-k)!*k!) = n*(n-1)*...*(n-k)/k!
    *
    * @param n
@@ -49,6 +55,7 @@ namespace Difficulty {
   }
 
   /**
+   * 排列
    * @description A[n,k] = n!/(n-k)! = n*(n-1)*...*(n-k)
    *
    * @param n
@@ -56,39 +63,84 @@ namespace Difficulty {
    * @returns
    */
   function getPermutationValue(n: number, k: number): number {
-    if (k <= 0) {
-      return getFactorialValue(n);
+    if (k <= 0 || n < k) {
+      return 0;
     }
     let res = 1,
       cur = n;
-    while (cur >= k) {
+    while (cur > n - k) {
       res *= cur;
+      cur--;
     }
     return res;
   }
 
-  function getPartialValue(max: number, len: number, remain: number): number {
-    if (remain <= 0) {
-      return 0;
+  function getPartialValue(
+    arr: number[],
+    i: number,
+    map: Map<number, boolean>
+  ): number {
+    let res = 0,
+      max = arr[i];
+    if (i == arr.length - 1) {
+      let j = max;
+      while (j >= 0) {
+        if (!map.has(j)) {
+          res += 1;
+        }
+        j--;
+      }
+      return res;
     }
-    if (len <= 1) {
-      return len;
+
+    // console.log(i, res);
+    // console.log("map", map);
+
+    if (!map.has(max)) {
+      const newMap = new Map(map);
+      newMap.set(max, true);
+      res += getPartialValue(arr, i + 1, newMap);
     }
-    let i = len,
-      res = 0;
-    while (i > 1) {
-      res += 9 * getPermutationValue(9, i - 1);
-      i--;
+    if (max > 0) {
+      let j = max - 1,
+        count = 0;
+      // console.log("j", j);
+      // console.log("map", map);
+      while (j >= 0) {
+        if (!map.has(j)) {
+          count += 1;
+        }
+        j--;
+      }
+      // console.log("count", count);
+
+      res +=
+        count * (getPermutationValue(10 - (i + 1), arr.length - (i + 1)) || 1);
     }
-    res += 9;
+    // console.log("res", res);
+
     return res;
   }
 
   function getIntegralValue(max: number, len: number): number {
-    return (
-      (max - 1) * getPermutationValue(9, len - 1) +
-      9 * getPermutationValue(9, len - 2)
-    );
+    if (len <= 1) {
+      return max;
+    }
+
+    let notFit = 0;
+    if (max - 1 > 0) {
+      notFit += (max - 1) * getPermutationValue(9, len - 1);
+    }
+
+    let i = len - 1;
+    while (i > 1) {
+      notFit += 9 * getPermutationValue(9, i - 1);
+      i--;
+    }
+
+    notFit += 9;
+
+    return notFit;
   }
 
   export function numDupDigitsAtMostN(n: number): number {
@@ -108,33 +160,15 @@ namespace Difficulty {
       i++;
     }
 
-    // console.log("maxCombination", maxCombination);
+    let notFit = getIntegralValue(maxNumArr[0], maxNumArr.length);
 
-    const firstNum = maxNumArr[0];
-    const arr = maxNumArr.slice(1);
+    // console.log("notFit", notFit);
 
-    // arr.sort((a, b) => a - b);
-
-    let notFit = 0;
-    i = 0;
-
-    while (i < arr.length) {
-      notFit += (arr[i] - 1) * getPermutationValue(9, len - 1);
-    }
-
-    console.log("notFit", notFit);
-
-    notFit += (firstNum - 1) * getPermutationValue(9, len - 1);
-
-    i = len - 1;
-    while (i > 1) {
-      notFit += 9 * getPermutationValue(9, i - 1);
-      i--;
-    }
-
-    notFit += 9;
-
-    console.log("notFit", notFit);
+    i = 1;
+    const map = new Map<number, boolean>();
+    map.set(maxNumArr[0], true);
+    notFit += getPartialValue(maxNumArr, i, map);
+    // console.log("notFit", notFit);
 
     return n - notFit;
   }
@@ -175,12 +209,12 @@ namespace Difficulty {
 
 // tsc -t esnext --outFile algorithms/test.js algorithms/test.ts algorithms/difficulty/num-dup-digits-at-most-n/index.ts && node algorithms/test.js
 (() => {
-  UnitTest.test(Difficulty.numDupDigitsAtMostN, 120, 13);
   UnitTest.test(Difficulty.numDupDigitsAtMostN, 10, 0);
   UnitTest.test(Difficulty.numDupDigitsAtMostN, 11, 1);
   UnitTest.test(Difficulty.numDupDigitsAtMostN, 20, 1);
   UnitTest.test(Difficulty.numDupDigitsAtMostN, 22, 2);
   UnitTest.test(Difficulty.numDupDigitsAtMostN, 100, 10);
-  UnitTest.test(Difficulty.numDupDigitsAtMostN, 1000, 262);
+  UnitTest.test(Difficulty.numDupDigitsAtMostN, 120, 21);
   UnitTest.test(Difficulty.numDupDigitsAtMostN, 999, 261);
+  UnitTest.test(Difficulty.numDupDigitsAtMostN, 1000, 262);
 })();
