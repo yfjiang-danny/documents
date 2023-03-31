@@ -25,7 +25,7 @@
 
 2. Nginx config: `nginx.conf`
 
-   ```conf
+   ```nginx
     http {
         server {
             listen 80;
@@ -50,7 +50,7 @@
 
    Or use sub domain:
 
-   ```conf
+   ```nginx
    http {
         server {
             listen 80;
