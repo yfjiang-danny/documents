@@ -276,6 +276,10 @@ wget  http://nginx.org/download/nginx-1.20.0.tar.gz && tar -zxvf nginx-1.20.0.ta
    < HTTP/1.0 200 Connection Established                             .- nginx replies 200 that tunnel is established.
    ```
 
+## Build with docker
+
+See [build with docker](https://github.com/yfjiang-danny/ngx_http_proxy_connect_module/START.md)
+
 ## Q&A
 
 1. `patch` 的版本一定要匹配，不然构建会失败
