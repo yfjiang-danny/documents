@@ -11,6 +11,8 @@
 
 1. [Gatsby](https://www.gatsbyjs.com/docs)
 2. [Netlify](https://www.netlify.com/)
+3. [Vercel](https://vercel.com/)
+4. [Architect](https://arc.codes/)
 
 ### Node Server Framework
 
