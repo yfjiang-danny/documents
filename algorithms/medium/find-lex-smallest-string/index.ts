@@ -147,7 +147,7 @@ namespace Medium {
   }
 
   // 获取最大公约数
-  function getCommonDivisor(num1: number, num2: number): number {
+  function getMaxCommonDivisor(num1: number, num2: number): number {
     let max = Math.max(num1, num2);
     let min = Math.min(num1, num2);
     let a = max % min;
@@ -175,7 +175,7 @@ namespace Medium {
     let res = s;
 
     const isEven = (s.length + b) % 2 == 0;
-    const moveOffset = getCommonDivisor(s.length, b);
+    const moveOffset = getMaxCommonDivisor(s.length, b);
 
     for (let i = 0; i < s.length; i += moveOffset) {
       const na = isEven ? 0 : getMinCalcNum(parseInt(s[i]), a);
