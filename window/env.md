@@ -2,7 +2,7 @@
 
 _Use `set` work for current terminal. Use `setx` work for window permanent, but need to reopen terminal_
 
-### Watch PATH
+### Look for PATH
 
 ```cmd
 echo %PATH%
@@ -28,7 +28,7 @@ set PATH "%PATH:;C:\Path\To\Update\Old=%"
 
 ## Reference
 
-### `%PATH%` 和 `%PATH:` 的区别
+### Difference between `%PATH%` and `%PATH:` 
 
 `%PATH%` 和 `%PATH:` 的区别在于如何操作 Windows 环境变量中的 `PATH` 字符串。
 
