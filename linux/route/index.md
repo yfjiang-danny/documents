@@ -19,7 +19,7 @@
 There are two case: `sysconfig` version or `systemd` version. Check which version your linux is.
 
 1. `sysconfig`
-   a. Edit `/etc/sysconfig/network-scripts/route-eth0`, maybe not be eth0, decided by your network.
+   a. Edit `/etc/sysconfig/network-scripts/route-eth0`, maybe not be eth0,is decided by your network.
 
    ```bash
    sudo vi /etc/sysconfig/network-scripts/route-eth0
