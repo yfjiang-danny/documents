@@ -126,7 +126,7 @@ function Usage() {
 
 ```jsx
 interface PluginModel {
-  render(): void;
+  render(): ReactNode;
   // ...
 }
 
