@@ -1,123 +1,123 @@
 # 前端大杂烩
 
-1. 宏任务和微任务
-   首先，JS 是一个单线程的脚本语言。也就是说在一行代码执行的过程中，必然不会存在同时执行的另一行代码。
-   **微任务会在宏任务之前执行；** 在当前的微任务没有执行完成时，是不会执行下一个宏任务的。
-   所以一个 js 线程里边定义的微任务会优先于宏任务先执行。
-   setTimeout 和 setInterval 属于宏任务。
-   Promise.then 属于微任务。
+1.  宏任务和微任务
+    首先，JS 是一个单线程的脚本语言。也就是说在一行代码执行的过程中，必然不会存在同时执行的另一行代码。
+    **微任务会在宏任务之前执行；** 在当前的微任务没有执行完成时，是不会执行下一个宏任务的。
+    所以一个 js 线程里边定义的微任务会优先于宏任务先执行。
+    setTimeout 和 setInterval 属于宏任务。
+    Promise.then 属于微任务。
 
-   ```typescript
-   setTimeout(() => console.log(0), 0);
-   new Promise((r) => {
-     r();
-   }).then((r) => console.log(2));
+    ```typescript
+    setTimeout(() => console.log(0), 0);
+    new Promise((r) => {
+      r();
+    }).then((r) => console.log(2));
 
-   // output: 2 0
-   ```
+    // output: 2 0
+    ```
 
-2. Promise 的优缺点
-   **优**
+2.  Promise 的优缺点
+    **优**
 
-   > a. 解决 callback（回调地狱） 的问题
-   > b. 包含了更好的错误处理（异常处理）
-   > c. 统一异步 API，Promise 逐渐被用作浏览器的异步 API，统一了各种各样的 API，以及不兼容的模式和手法。
+    > a. 解决 callback（回调地狱） 的问题
+    > b. 包含了更好的错误处理（异常处理）
+    > c. 统一异步 API，Promise 逐渐被用作浏览器的异步 API，统一了各种各样的 API，以及不兼容的模式和手法。
 
-   **缺**
+    **缺**
 
-   > a. 无法取消和中断，一旦新建就会立即执行，无法中途取消
-   > b. 如果不设置回调函数，Promise 内部抛出的错误，不会反应到外部
-   > c. 当处于 Pending 状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将结束）？
-   > d. Promise 真正执行回调的时候，定义 Promise 那部分实际上已经执行完了，所以 Promise 的报错堆栈上下文不太友好
+    > a. 无法取消和中断，一旦新建就会立即执行，无法中途取消
+    > b. 如果不设置回调函数，Promise 内部抛出的错误，不会反应到外部
+    > c. 当处于 Pending 状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将结束）？
+    > d. Promise 真正执行回调的时候，定义 Promise 那部分实际上已经执行完了，所以 Promise 的报错堆栈上下文不太友好
 
-3. JWT 和 Oauth 的区别 [知乎](https://zhuanlan.zhihu.com/p/121630884)
+3.  JWT 和 Oauth 的区别 [知乎](https://zhuanlan.zhihu.com/p/121630884)
 
-   - JWT(Json Web Token) 是一种**认证协议** 。JWT 提供了一种用于发布接入令牌（Access Token),并对发布的签名接入令牌进行验证的方法。 令牌（Token）本身包含了一系列声明，应用程序可以根据这些声明限制用户对资源的访问。
-   - JWT 一般是由三部分组成，**Header + Payload + Signature**。Header 部分是一个 JSON 对象，描述 JWT 的元数据；Payload 部分也是一个 JSON 对象，用来存放实际需要传递的数据。Signature 部分是对前两部分的签名，防止数据篡改。其中 Header 部分和 Payload 部分通常会采用 Base64URL 的算法进行加密。
-   - Base64URL 算法与 Base64 算法的区别：Base64 有三个字符`+`、`/`和`=`，在 URL 里面有特殊含义，所以要被替换掉：`=`被省略、`+`替换成`-`，`/`替换成`_` 。这就是 Base64URL 算法。
-   - OAuth2 是一种**授权框架**。提供了一套详细的授权机制（指导）。用户或应用可以通过公开的或私有的设置，授权第三方应用访问特定资源。比如微信授权登录。
+    - JWT(Json Web Token) 是一种**认证协议** 。JWT 提供了一种用于发布接入令牌（Access Token),并对发布的签名接入令牌进行验证的方法。 令牌（Token）本身包含了一系列声明，应用程序可以根据这些声明限制用户对资源的访问。
+    - JWT 一般是由三部分组成，**Header + Payload + Signature**。Header 部分是一个 JSON 对象，描述 JWT 的元数据；Payload 部分也是一个 JSON 对象，用来存放实际需要传递的数据。Signature 部分是对前两部分的签名，防止数据篡改。其中 Header 部分和 Payload 部分通常会采用 Base64URL 的算法进行加密。
+    - Base64URL 算法与 Base64 算法的区别：Base64 有三个字符`+`、`/`和`=`，在 URL 里面有特殊含义，所以要被替换掉：`=`被省略、`+`替换成`-`，`/`替换成`_` 。这就是 Base64URL 算法。
+    - OAuth2 是一种**授权框架**。提供了一套详细的授权机制（指导）。用户或应用可以通过公开的或私有的设置，授权第三方应用访问特定资源。比如微信授权登录。
 
-4. 深浅拷贝
+4.  深浅拷贝
 
-   - 浅拷贝：拷贝值或者拷贝地址，常见有 `object.assign`, `...`扩展运算符,`concat`, `slice`,`splice`
-   - 深拷贝：开辟新的内存空间，将源对象的值完全拷贝到新的内存空间。常见的有 `JSON.stringify`,`手写递归拷贝`
+    - 浅拷贝：拷贝值或者拷贝地址，常见有 `object.assign`, `...`扩展运算符,`concat`, `slice`,`splice`
+    - 深拷贝：开辟新的内存空间，将源对象的值完全拷贝到新的内存空间。常见的有 `JSON.stringify`,`手写递归拷贝`
 
-     > JSON.stringify 缺点：a. 会忽略 `undefined`、`symbol` b. 不能序列化函数 c. 无法拷贝不可枚举的属性和对象的原型链 d. 拷贝 `RegExp` 引用类型会变成空对象，`Date` 类型会变成字符串 e. 对象中含有 `NaN`、`Infinity` 以及 `-Infinity`，`JSON` 序列化的结果会变成 `null` f. 不能解决循环引用的对象，即对象成环 (`obj[key] = obj`)
+      > JSON.stringify 缺点：a. 会忽略 `undefined`、`symbol` b. 不能序列化函数 c. 无法拷贝不可枚举的属性和对象的原型链 d. 拷贝 `RegExp` 引用类型会变成空对象，`Date` 类型会变成字符串 e. 对象中含有 `NaN`、`Infinity` 以及 `-Infinity`，`JSON` 序列化的结果会变成 `null` f. 不能解决循环引用的对象，即对象成环 (`obj[key] = obj`)
 
-     ```js
-     const isComplexDataType = (obj) =>
-       (typeof obj === "object" || typeof obj === "function") && obj !== null;
-     const deepClone = function (obj, hash = new WeakMap()) {
-       if (obj.constructor === Date) {
-         return new Date(obj); // 日期对象直接返回一个新的日期对象
-       }
+      ```js
+      const isComplexDataType = (obj) =>
+        (typeof obj === "object" || typeof obj === "function") && obj !== null;
+      const deepClone = function (obj, hash = new WeakMap()) {
+        if (obj.constructor === Date) {
+          return new Date(obj); // 日期对象直接返回一个新的日期对象
+        }
 
-       if (obj.constructor === RegExp) {
-         return new RegExp(obj); //正则对象直接返回一个新的正则对象
-       }
+        if (obj.constructor === RegExp) {
+          return new RegExp(obj); //正则对象直接返回一个新的正则对象
+        }
 
-       //如果循环引用了就用 weakMap 来解决
-       if (hash.has(obj)) {
-         return hash.get(obj);
-       }
-       let allDesc = Object.getOwnPropertyDescriptors(obj);
+        //如果循环引用了就用 weakMap 来解决
+        if (hash.has(obj)) {
+          return hash.get(obj);
+        }
+        let allDesc = Object.getOwnPropertyDescriptors(obj);
 
-       //遍历传入参数所有键的特性
-       let cloneObj = Object.create(Object.getPrototypeOf(obj), allDesc);
+        //遍历传入参数所有键的特性
+        let cloneObj = Object.create(Object.getPrototypeOf(obj), allDesc);
 
-       // 把 cloneObj 原型复制到 obj 上
-       hash.set(obj, cloneObj);
+        // 把 cloneObj 原型复制到 obj 上
+        hash.set(obj, cloneObj);
 
-       for (let key of Reflect.ownKeys(obj)) {
-         cloneObj[key] =
-           isComplexDataType(obj[key]) && typeof obj[key] !== "function"
-             ? deepClone(obj[key], hash)
-             : obj[key];
-       }
-       return cloneObj;
-     };
-     ```
+        for (let key of Reflect.ownKeys(obj)) {
+          cloneObj[key] =
+            isComplexDataType(obj[key]) && typeof obj[key] !== "function"
+              ? deepClone(obj[key], hash)
+              : obj[key];
+        }
+        return cloneObj;
+      };
+      ```
 
-5. Proxy
-   Proxy 在目标对象的外层搭建了一层拦截，外界对目标对象的某些操作，必须通过这层拦截。
+5.  Proxy
+    Proxy 在目标对象的外层搭建了一层拦截，外界对目标对象的某些操作，必须通过这层拦截。
 
-   - 拦截和监视外部对对象的访问
-   - 在复杂操作前对操作进行校验或对所需资源进行管理
+    - 拦截和监视外部对对象的访问
+    - 在复杂操作前对操作进行校验或对所需资源进行管理
 
-6. 重排(reflow)、重绘(repaint)
-   重排：当 DOM 的变化影响了元素的**几何信息**(元素的的位置和尺寸大小)，浏览器需要重新计算元素的几何属性，将其安放在界面中的正确位置，这个过程叫做重排。重排也叫回流，简单的说就是重新生成布局，重新排列元素。
-   ![](../assets/reflow.png)
-   重绘：当一个元素的**外观**发生改变，但没有改变布局,重新把元素外观绘制出来的过程，叫做重绘。
-   ![](../assets/repaint.png)
+6.  重排(reflow)、重绘(repaint)
+    重排：当 DOM 的变化影响了元素的**几何信息**(元素的的位置和尺寸大小)，浏览器需要重新计算元素的几何属性，将其安放在界面中的正确位置，这个过程叫做重排。重排也叫回流，简单的说就是重新生成布局，重新排列元素。
+    ![](../assets/reflow.png)
+    重绘：当一个元素的**外观**发生改变，但没有改变布局,重新把元素外观绘制出来的过程，叫做重绘。
+    ![](../assets/repaint.png)
 
-7. `Math.sort` 的时间复杂度
+7.  `Math.sort` 的时间复杂度
 
-   1. 每个浏览器内部使用的算法可能都不一样，w3c 只是规定了 api 的功能，并没有规定排序的规则
-   2. chrome 在 70 版本前，使用的排序策略是：当元素个数小于 10 个的时候，使用插入排序，超过则使用快速排序； b. 70 版本后，使用了 Timsort 算法
+    1. 每个浏览器内部使用的算法可能都不一样，w3c 只是规定了 api 的功能，并没有规定排序的规则
+    2. chrome 在 70 版本前，使用的排序策略是：当元素个数小于 10 个的时候，使用插入排序，超过则使用快速排序； b. 70 版本后，使用了 Timsort 算法
 
-8. `Promise.all()`、`Promise.any()`、`Promise.race()`、`Promise.allSettled()`
+8.  `Promise.all()`、`Promise.any()`、`Promise.race()`、`Promise.allSettled()`
 
-   > Promise.all：等待所有都完成（或第一个失败）。
-   > Promise.any：等待其中任何一个完成或所有都失败。
-   > Promise.race：等待其中一个完成或拒绝。
-   > Promise.allSettled：等待所有都完成或者拒绝。
+    > Promise.all：等待所有都完成（或第一个失败）。
+    > Promise.any：等待其中任何一个完成或所有都失败。
+    > Promise.race：等待其中一个完成或拒绝。
+    > Promise.allSettled：等待所有都完成或者拒绝。
 
-   **settled：敲定值（兑现或拒绝），即 `fulfilled` 和 `rejected`的统称**
+    **settled：敲定值（兑现或拒绝），即 `fulfilled` 和 `rejected`的统称**
 
-9. 字体图标的压缩方法
-   主要有 子集化（仅保留所需的图标）、转换为更小的格式（如 WOFF/WOFF2），以及删除不必要的字符（使用字体编辑工具）等。此外，还可以通过 预渲染 为图像格式，或使用服务器端的 Brotli/Gzip 压缩 来进一步减小文件大小。
+9.  字体图标的压缩方法
+    主要有 子集化（仅保留所需的图标）、转换为更小的格式（如 WOFF/WOFF2），以及删除不必要的字符（使用字体编辑工具）等。此外，还可以通过 预渲染 为图像格式，或使用服务器端的 Brotli/Gzip 压缩 来进一步减小文件大小。
 
-   主流压缩方法
+    主流压缩方法
 
-   - 子集化（Subsetting）：根据实际需求，只保留字体中使用的部分字符。例如，如果网页只使用拉丁字母，就不需要包含中文等其他字符，这可以显著减小文件大小。
-   - 转换为 WOFF/WOFF2 格式：WOFF（Web Open Font Format）和 WOFF2 是专门为网络设计的字体格式，它们内置了压缩算法，通常比 TTF 或 OTF 格式的文件要小。WOFF2 的压缩率更高，是目前推荐的格式。
-   - 使用字体编辑器删除多余图标：使用如百度字体编辑器这样的工具，打开字体文件，手动删除不需要的图标，只保留网站实际使用的图标。
+    - 子集化（Subsetting）：根据实际需求，只保留字体中使用的部分字符。例如，如果网页只使用拉丁字母，就不需要包含中文等其他字符，这可以显著减小文件大小。
+    - 转换为 WOFF/WOFF2 格式：WOFF（Web Open Font Format）和 WOFF2 是专门为网络设计的字体格式，它们内置了压缩算法，通常比 TTF 或 OTF 格式的文件要小。WOFF2 的压缩率更高，是目前推荐的格式。
+    - 使用字体编辑器删除多余图标：使用如百度字体编辑器这样的工具，打开字体文件，手动删除不需要的图标，只保留网站实际使用的图标。
 
-   其他压缩方法
+    其他压缩方法
 
-   - 预渲染为图像：对于图标字体，可以将它们预先渲染成 SVG 或 PNG 等图像格式。这种方法虽然牺牲了文本的可缩放性和可选择性，但可以消除字体加载时间。
-   - 服务器端压缩：除了字体文件本身的压缩外，还可以使用服务器端通用压缩算法（如 Brotli 或 Gzip）来进一步减小字体文件在传输过程中的大小。
-   - 使用在线工具：可以使用 FontSquirrel 的 Webfont Generator 等在线工具，它们通常会自动应用多种优化技术，如转换为 WOFF/WOFF2 和子集化，来压缩字体文件
+    - 预渲染为图像：对于图标字体，可以将它们预先渲染成 SVG 或 PNG 等图像格式。这种方法虽然牺牲了文本的可缩放性和可选择性，但可以消除字体加载时间。
+    - 服务器端压缩：除了字体文件本身的压缩外，还可以使用服务器端通用压缩算法（如 Brotli 或 Gzip）来进一步减小字体文件在传输过程中的大小。
+    - 使用在线工具：可以使用 FontSquirrel 的 Webfont Generator 等在线工具，它们通常会自动应用多种优化技术，如转换为 WOFF/WOFF2 和子集化，来压缩字体文件
 
 10. 事件循环、微任务、宏任务
     事件循环是 JavaScript 引擎（特别是运行在浏览器和 Node.js 环境中）用来协调和处理事件、回调函数、异步任务的一种机制。它让单线程的 JavaScript 能够执行非阻塞的异步操作。
@@ -201,3 +201,45 @@
     8. 本地优化：优化网站在本地搜索引擎（如 Google 地图）上的表现，提高本地用户的访问量。提供准确的地理位置信息和联系方式，使网站更容易被本地用户找到。
     9. 增加 robot.txt 和 siteMap，方便搜索引擎抓取
     10. 合理使用 metadata 中的 index, noindex, follow, nofollow 标签，比如登录页面、注册页面、404 页面等，不希望被搜索引擎抓取的页面，可以设置 noindex, nofollow
+
+17. HTTP/1.1 和 HTTP/2 的区别
+    HTTP/1.1 和 HTTP/2 是两种常见的 HTTP 协议，它们之间有一些主要的区别：
+
+    1. 二进制协议：HTTP/2 是一个二进制协议，而 HTTP/1.1 是一个文本协议。二进制协议更高效，因为它可以更有效地解析和处理数据。
+    2. 多路复用：HTTP/2 支持多路复用，这意味着多个请求和响应可以在单个连接上同时进行，而不需要创建多个连接。这可以显著提高性能，减少延迟。HTTP/1.1 则需要为每个请求创建一个新的连接，这会增加延迟和开销。
+    3. 头部压缩：HTTP/2 对请求和响应头部进行了压缩，这可以减少传输的数据量，提高性能。HTTP/1.1 则没有对头部进行压缩。
+    4. 服务器推送：HTTP/2 支持服务器推送，这意味着服务器可以在不请求的情况下主动向客户端发送资源。这可以减少延迟，提高性能。HTTP/1.1 则不支持服务器推送。
+    5. 安全性：HTTP/2 默认使用 TLS（传输层安全协议）进行加密，而 HTTP/1.1 则不强制要求使用 TLS。使用 TLS 可以保护数据传输的安全性，防止数据被窃取或篡改。
+    6. HTTP/2 的其他特性包括：请求优先级、流量控制、服务器推送等。
+
+18. XSS 攻击的防范、CSRF 攻击的防范、SQL 注入攻击的防范
+    XSS 攻击、CSRF 攻击和 SQL 注入攻击是常见的网络安全攻击方式。下面是一些防范这些攻击的方法：
+
+    1. XSS 攻击：跨站脚本攻击（XSS）是一种攻击方式，攻击者通过在网页中注入恶意脚本，来窃取用户信息或执行恶意操作。防范 XSS 攻击的方法包括：
+       - 对用户输入进行验证和过滤，确保输入的数据是安全的。
+       - 使用内容安全策略（CSP）来限制网页可以加载的资源，防止恶意脚本的执行。
+       - 对输出进行编码，将特殊字符转换为安全的 HTML 实体，防止恶意脚本的执行。
+       - 使用 HTTPOnly 和 Secure 标志的 Cookie，防止恶意脚本通过 JavaScript 访问 Cookie。
+       - 使用 X-XSS-Protection 头部，启用浏览器内置的 XSS 防护功能。
+    2. CSRF 攻击：跨站请求伪造（CSRF）是一种攻击方式，攻击者通过诱导用户在不知情的情况下发送恶意请求，来窃取用户信息或执行恶意操作。防范 CSRF 攻击的方法包括：
+       - 使用 CSRF 令牌，在用户请求中添加一个唯一的令牌，服务器验证令牌是否合法，防止恶意请求的执行。
+       - 使用 SameSite Cookie 属性，限制 Cookie 在跨站请求中的发送，防止恶意请求的执行。
+       - 使用 Referer 头部验证请求的来源，防止恶意请求的执行。
+       - 使用 POST 请求代替 GET 请求，减少恶意请求的攻击面。
+    3. SQL 注入攻击：SQL 注入攻击是一种攻击方式，攻击者通过在输入中注入恶意 SQL 语句，来窃取数据或执行恶意操作。防范 SQL 注入攻击的方法包括：
+       - 对用户输入进行验证和过滤，确保输入的数据是安全的。
+       - 使用参数化查询或预编译语句，将用户输入作为参数传递给 SQL 语句，防止恶意 SQL 语句的执行。
+
+19. src 与 href 的区别
+    在 HTML 中，`src` 和 `href` 是两个常用的属性，它们用于引用外部资源，但它们的用途和作用方式有所不同。下面是 `src` 和 `href` 的区别：
+
+    1.  `src`：`src` 属性用于引用外部资源，并将资源嵌入到当前文档中。当浏览器解析到 `src` 属性时，会立即加载并执行该资源。常见的 `src` 属性包括：
+        - `<img src="image.jpg">`：引用并嵌入一张图片。当浏览器解析到这个标签时，会立即加载并显示图片。
+        - `<script src="script.js"></script>`：引用并嵌入一个 JavaScript 文件。当浏览器解析到这个标签时，会立即加载并执行 JavaScript 文件。
+        - `<link rel="stylesheet" href="style.css">`：引用并嵌入一个 CSS 文件。当浏览器解析到这个标签时，会立即加载并应用 CSS 样式。
+        - `<iframe src="page.html"></iframe>`：引用并嵌入一个 HTML 页面。当浏览器解析到这个标签时，会立即加载并显示嵌入的页面。
+        - `<video src="video.mp4"></video>`：引用并嵌入一个视频文件。当浏览器解析到这个标签时，会立即加载并播放视频。
+    2.  `href`：`href` 属性用于引用外部资源，但不将资源嵌入到当前文档中。当浏览器解析到 `href` 属性时，不会立即加载资源，而是将资源链接到当前文档中。常见的 `href` 属性包括：
+        - `<a href="page.html">Link</a>`：引用一个 HTML 页面。当用户点击链接时，浏览器会加载并显示链接的页面。
+        - `<link rel="stylesheet" href="style.css">`：引用一个 CSS 文件。当浏览器解析到这个标签时，会加载并应用 CSS 样式。
+        - `<link rel="icon" href="favicon.ico">`：引用一个网站图标。当浏览器加载页面时，会显示这个图标。
